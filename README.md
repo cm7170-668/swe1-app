@@ -54,3 +54,4 @@ flake8 .
 ## Deployment
 
 The application automatically deploys to AWS Elastic Beanstalk when all tests pass on the main branch.
+
