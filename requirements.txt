@@ -19,6 +19,7 @@ jmespath==1.0.1
 packaging==24.2
 paramiko==4.0.0
 pathspec==0.12.1
+psycopg2-binary==2.9.10
 pycparser==2.23
 PyNaCl==1.6.0
 python-dateutil==2.9.0.post0
@@ -32,3 +33,9 @@ termcolor==2.5.0
 urllib3==1.26.20
 wcwidth==0.2.14
 wrapt==1.17.3
+
+# CI/CD Tools
+black==24.10.0
+flake8==7.1.1
+coverage==7.6.9
+coveralls==4.0.1

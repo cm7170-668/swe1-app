@@ -1,0 +1,73 @@
+# Travis CI Configuration for Django Project
+# This file defines how Travis CI builds and deploys your application
+
+# Specify the programming language
+language: python
+
+# Python version to use for testing
+python:
+  - "3.12"
+
+# Services needed for the build (PostgreSQL for testing with database)
+services:
+  - postgresql
+
+# Environment variables for the build
+env:
+  global:
+    - DJANGO_SETTINGS_MODULE=mysite.settings
+
+# Cache pip dependencies to speed up builds
+cache:
+  directories:
+    - $HOME/.cache/pip
+
+# Before install phase: Update system packages
+before_install:
+  - sudo apt-get update
+
+# Install dependencies
+install:
+  - pip install -r requirements.txt
+  - pip install black flake8 coverage coveralls
+
+# Before running scripts, set up the database
+before_script:
+  - psql -c 'create database test_db;' -U postgres
+
+# Commands to run for testing
+script:
+  # 1. Check code formatting with black (--check flag doesn't modify files)
+  - black --check .
+
+  # 2. Run flake8 linter to check code quality
+  - flake8 .
+
+  # 3. Run Django tests with coverage tracking
+  - coverage run --source='.' manage.py test
+
+  # 4. Generate coverage report
+  - coverage report
+
+# After successful tests, send coverage data to Coveralls
+after_success:
+  - coveralls
+
+# Deploy to AWS Elastic Beanstalk after successful build
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-1"  # Your AWS region (N. Virginia)
+  app: "djangotutorial"  # Your EB application name
+  env: "djangotutorial-env"  # Your EB environment name
+  bucket_name: "elasticbeanstalk-us-east-1-680318115609"  # S3 bucket for deployment artifacts
+  bucket_path: "djangotutorial"
+  on:
+    branch: main  # Only deploy from main branch
+  access_key_id: $AWS_ACCESS_KEY_ID  # Set in Travis CI settings
+  secret_access_key: $AWS_SECRET_ACCESS_KEY  # Set in Travis CI settings
+
+# Notifications (optional - sends email on build status)
+notifications:
+  email:
+    on_success: change  # Only notify when build status changes
+    on_failure: always  # Always notify on failure

@@ -1,0 +1,40 @@
+# Flake8 Configuration File
+# This configures the flake8 linter to work harmoniously with black formatter
+
+[flake8]
+# Set max line length to 88 to match black's default
+max-line-length = 88
+
+# Extend the default ignored errors to be compatible with black
+extend-ignore =
+    # E203: whitespace before ':' (conflicts with black)
+    E203,
+    # W503: line break before binary operator (conflicts with black)
+    W503
+
+# Exclude these directories from linting
+exclude =
+    .git,
+    __pycache__,
+    venv,
+    env,
+    .venv,
+    migrations,
+    .ebextensions,
+    .elasticbeanstalk,
+    staticfiles,
+    *.egg-info,
+    .tox,
+    .eggs
+
+# Show source code for each error
+show-source = True
+
+# Show the relevant text for each error
+show-pep8 = True
+
+# Count the number of occurrences of each error/warning code
+count = True
+
+# Print total number of errors
+statistics = True
